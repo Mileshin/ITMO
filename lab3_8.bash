@@ -1,6 +1,6 @@
 #! /bin/bash
 LOGFILE=log8
-exec 2>./$LOGFILE
+#exec 2>./$LOGFILE
 
 if [ "$#" -gt 1 ]; then	 
 	echo "Too many arguments!"
@@ -10,15 +10,15 @@ else
 	else 
 		UNAME=$1
 	fi
-	ID=`id -u $UNAME || echo -1`
-	GR=`id -G $UNAME || echo -1`
-	#echo $ID  $GR
-	if [[ "$ID" -eq -1 || "$GR" -eq -1 ]]; then
+	ID=$(id -u $UNAME)
+	GR=$(id -G $UNAME)
+	GR=`echo //${GR[@]/ //}/`
+#	echo $ID $GR
+	if [[ -z "$ID" || -z "$GR" ]]; then
 		echo "Incorrect name"
 	else
-		ls -abn | awk -v ID=$ID -v GR=$GR ' { 	
-		if (($1 ~ "?r.*" && $3==ID) || 	 
-		    ($1 ~ "????r.*" && $4==GR) ||	
-		    ($1 ~ "???????r.*" && $3!=ID && $4!=GR)) print $NF}'
+		ls -Rabn | awk -v ID=$ID -v GR=$GR ' { P="\/" $4 "\/"; 	
+		if ((NF>2) && ((($1 ~ /^.r.*$/) && ($3==ID)) || (($1 ~ /^....r.*$/) && (index(GR,"\/" $4 "\/") >0 )) || (($1 ~ /^.......r.*$/) && ( ($3!=ID) && index(GR,"\/" $4 "\/") == 0 ))) && ($NF !~ /^\.\.?$/)) print $NF}'
 	fi
+# || (($1 ~ /^.......r.*$/) && ( ($3!=ID) && index(GR,"\/" $4 "\/") == 0 ))
 fi
