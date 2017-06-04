@@ -45,9 +45,9 @@ task3_client.o: task3_client.c
 	$(CC) $(CFLAGS) $^ -o $@
 
 task4: task4.o
-	$(CC) $(CFLAGS) $^ -lrt -o $@
+	$(CC) $^ -lrt -o $@
 
-task4.o: task3.c
+task4.o: task4.c
 	$(CC) $(CFLAGS) $^ -o $@
 
 

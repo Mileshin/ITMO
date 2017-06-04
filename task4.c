@@ -15,7 +15,7 @@ sem_t 		sem[3];
 
 void print_alpha(){
 	for (int i = 0; i < ALPHABET_LEN; i++) {
-		printf("%c", alpha[i]);
+		printf("%c", alphabet[i]);
 	}
 	printf("\n");
 }
@@ -24,9 +24,9 @@ void *reverse(void *arg){
 	(void) arg;
 	while (sem_wait(&sem[0]) == 0) {
 		for (int i = 0; i < ALPHABET_LEN / 2; i++) {
-			char t = alpha[i];
-			alpha[i] = alpha[ALPHABET_LEN - i - 1];
-			alpha[ALPHABET_LEN - i - 1] = t;
+			char t = alphabet[i];
+			alphabet[i] = alphabet[ALPHABET_LEN - i - 1];
+			alphabet[ALPHABET_LEN - i - 1] = t;
 		}
 		sem_post(&sem[2]);
 	}
@@ -36,8 +36,8 @@ void *reverse(void *arg){
 void *change_case(void *arg){
 	(void) arg;
 	while (sem_wait(&sem[1]) == 0) {
-		for (int i = 0; i < LETTERS; i++) {
-			alpha[i] += (alpha[i] - 'A') < LETTERS ? 32 : -32;
+		for (int i = 0; i < ALPHABET_LEN; i++) {
+			alphabet[i] += (alphabet[i] - 'A') < ALPHABET_LEN ? 32 : -32;
 		}
 		sem_post(&sem[2]);
 	}
@@ -46,7 +46,7 @@ void *change_case(void *arg){
 
 void sighandler(int signo){
 	(void) signo;
-	for (int i = 0; i < 3; i++) {
+	for(int i = 0; i < 3; i++) {
 		sem_destroy(&sem[i]);
 	}
 	_exit(0);
@@ -54,9 +54,9 @@ void sighandler(int signo){
 
 int main(){
 	struct sigaction act;
-        memset(&act, 0, sizeof(a));
+        memset(&act, 0, sizeof(act));
         act.sa_handler = sighandler;
-        sigaction(SIGINT, &a, NULL);
+        sigaction(SIGINT, &act, NULL);
 
 	for (int i = 0; i < 3; i++) {
 		if (sem_init(&sem[i], 0, 0) == -1) {
@@ -66,7 +66,7 @@ int main(){
 	}
 	/* Creating a new threads */
 	thr_create(NULL, NULL, reverse, NULL, NULL, &t[0]);
-	thr_create(NULL, NULL, ccase, NULL, NULL, &t[1]);
+	thr_create(NULL, NULL, change_case, NULL, NULL, &t[1]);
 
 	while (1) {
 		unsigned int i = (i + 1) % 2;
