@@ -7,6 +7,8 @@ part1: task1 task2 task3
 
 part2: task4 task5 task6 task7
 
+part2: task8
+
 task1: task1_server task1_client
 
 task2: task2_server task2_client
@@ -67,6 +69,20 @@ task7: task7.o
 
 task7.o: task7.c
 	$(CC) $(CFLAGS) $^ -o $@
+
+task8: task8_server task8_client
+
+task8_server: task8_server.o
+	$(CC) $^ -o $@
+
+task8_client: task8_client.o
+	$(CC) $^ -o $@
+
+task8_server.o: task8_server.c
+	$(CC) $(CFLAGS) -lnsl -lsocket $^ -o $@
+
+task8_client.o: task8_client.c
+	$(CC) $(CFLAGS) -lnsl -lsocket $^ -o $@
 
 clean:
 	rm -f *.o task{1..10}{_client,server,''}
