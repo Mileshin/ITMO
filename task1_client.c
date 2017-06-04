@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/shm.h>
 #include <fcntl.h>
@@ -15,7 +16,7 @@ int main(){
 	key_t key = KEY; /* ipc key */
 	
 	/* setup message queue */
-	int mem_id = shmget(key, sizeof(info), 0);
+	mem_id = shmget(key, sizeof(info), 0);
 	
 	if (mem_id < 0){
 		perror("shmget");
@@ -31,7 +32,7 @@ int main(){
 	
 	/* print id */
 	printf("%ld\n%ld\n%ld\n", (long) info->pid, (long) info->uid,
-			(long) i->gid);
+			(long) info->gid);
 	/* print time */
 	printf("%ld\n", (long) info->diff);
 	/* print loadavg */
