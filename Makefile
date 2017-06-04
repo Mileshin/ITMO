@@ -1,13 +1,13 @@
 CC=gcc
 CFLAGS=-std=c99 -D_XOPEN_SOURCE=600 -D_POSIX_C_SOURCE -Wall -Wextra -pedantic -c
 
-all: part1 part2
+all: part1 part2 part3
 
 part1: task1 task2 task3
 
 part2: task4 task5 task6 task7
 
-part2: task8
+part3: task8 task9
 
 task1: task1_server task1_client
 
