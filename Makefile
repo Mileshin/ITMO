@@ -5,7 +5,7 @@ all: part1 part2
 
 part1: task1 task2 task3
 
-part2: task4 task5 task6
+part2: task4 task5 task6 task7
 
 task1: task1_server task1_client
 
@@ -60,6 +60,12 @@ task6: task6.o
 	$(CC) $^ -lpthread -o $@
 
 task6.o: task6.c
+	$(CC) $(CFLAGS) $^ -o $@
+
+task7: task7.o
+	$(CC) $^ -lpthread -o $@
+
+task7.o: task7.c
 	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
