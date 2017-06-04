@@ -36,7 +36,7 @@ void sighandler(int signo){
 
 int main(){
 	time_t start = time(NULL);
-	time_t sur_time; 
+	time_t cur_time; 
 	struct sigaction act;
 	key_t key = KEY;
 	msg_t msg;
@@ -46,7 +46,7 @@ int main(){
 	sigaction(SIGINT, &act, NULL);
 
 	/* setup message queue */
-	msg_id = msgget(key, IPC_CREAT | 0644);
+	msg_id = msgget(key, IPC_CREAT | 0666);
 	if (msg_id < 0) {
 		perror("msgget");
 		return EXIT_FAILURE;
@@ -63,7 +63,7 @@ int main(){
 		}
 
 		msg.type++;
-		msg.info.diff = cur_time - start_time;
+		msg.info.diff = cur_time - start;
 		getloadavg(msg.info.avg, AVG_LEN);
 
 		sleep(1);

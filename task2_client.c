@@ -36,7 +36,7 @@ int main(){
 	printf("%ld\n%ld\n%ld\n", (long) info->pid, (long) info->uid, 
 			(long) info->gid);
 	/* print time */
-	printf("%ld\n", (long) i->diff);
+	printf("%ld\n", (long) info->diff);
 	/* print loadavg */
 	printf("%.6f %.6f %.6f\n", info->avg[0], 
 			info->avg[1], info->avg[2]);
