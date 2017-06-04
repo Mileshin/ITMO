@@ -84,5 +84,11 @@ task8_server.o: task8_server.c
 task8_client.o: task8_client.c
 	$(CC) $(CFLAGS) $^ -o $@
 
+task9: task9.o
+	$(CC) $^ -o $@
+
+task9.o: task9.c
+	$(CC) $(CFLAGS) $^ -o $@
+
 clean:
 	rm -f *.o task{1..10}{_client,server,''}
