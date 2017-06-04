@@ -50,6 +50,11 @@ task4: task4.o
 task4.o: task4.c
 	$(CC) $(CFLAGS) $^ -o $@
 
+task5: task5.o
+	$(CC) $^ -lrt -o $@
+
+task5.o: task5.c
+	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
 	rm -f *.o task{1..10}{_client,server,''}
