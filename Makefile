@@ -5,7 +5,7 @@ all: part1 part2
 
 part1: task1 task2 task3
 
-part2: task4
+part2: task4 task5
 
 task1: task1_server task1_client
 
