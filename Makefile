@@ -16,7 +16,7 @@ task1_client: task1_client.o
 task1_server.o: task1_server.c
 	$(CC) $(CFLAGS) $^ -o $@
 
-task1_client.o: task1_clent.c
+task1_client.o: task1_client.c
 	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
