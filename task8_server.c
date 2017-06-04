@@ -29,8 +29,8 @@ info_t get_info(){
 }
 
 int main(){
-	time_t start_time = time(NULL);
-
+	time_t start = time(NULL);
+	time_t cur_time;
 	struct sockaddr_un addr;
 	int fd, cl, flags;
 
@@ -65,9 +65,9 @@ int main(){
 	}
 
 	while (1) {
-		time_t cur_time = time(NULL);
+		cur_time = time(NULL);
 
-		info.diff = cur_time - start_time;
+		info.diff = cur_time - start;
 		getloadavg(info.avg, 3);
 		
 		if ((cl = accept(fd, NULL, NULL)) != -1)

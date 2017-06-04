@@ -73,16 +73,16 @@ task7.o: task7.c
 task8: task8_server task8_client
 
 task8_server: task8_server.o
-	$(CC) $^ -o $@
+	$(CC) $^ -lnsl -lsocket -o $@
 
 task8_client: task8_client.o
-	$(CC) $^ -o $@
+	$(CC) $^ -lnsl -lsocket -o $@
 
 task8_server.o: task8_server.c
-	$(CC) $(CFLAGS) -lnsl -lsocket $^ -o $@
+	$(CC) $(CFLAGS)  $^ -o $@
 
 task8_client.o: task8_client.c
-	$(CC) $(CFLAGS) -lnsl -lsocket $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
 	rm -f *.o task{1..10}{_client,server,''}

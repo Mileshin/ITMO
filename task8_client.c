@@ -12,12 +12,13 @@
 
 int main(){
 	int fd;
+	struct sockaddr_un addr;
+	
 	if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
 		perror("socket");
 		return EXIT_FAILURE;
 	}
 
-	struct sockaddr_un addr;
 	memset(&addr, 0, sizeof(addr));
 	addr.sun_family = AF_UNIX;
 	strcpy(addr.sun_path, name);
@@ -27,11 +28,11 @@ int main(){
 		return EXIT_FAILURE;
 	}
 	
-	info_t *info = (info_t*) malloc(sizeof(info_t));
-	if (!info) {
-		printf("Out of memory.\n");
-		return EXIT_FAILURE;
-	}
+  	info_t *info = (info_t*) malloc(sizeof(info_t));
+  	if (!info) {
+  		printf("Out of memory.\n");
+  		return EXIT_FAILURE;
+  	}
 
 	if (read(fd, info, sizeof(info_t)) != sizeof(info_t)) {
 		printf("Read failed.\n");
