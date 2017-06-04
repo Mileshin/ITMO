@@ -1,9 +1,11 @@
 CC=gcc
 CFLAGS=-std=c99 -D_XOPEN_SOURCE=600 -D_POSIX_C_SOURCE -Wall -Wextra -pedantic -c
 
-all: part1
+all: part1 part2
 
 part1: task1 task2 task3
+
+part2: task4
 
 task1: task1_server task1_client
 
@@ -41,6 +43,13 @@ task3_server.o: task3_server.c
 
 task3_client.o: task3_client.c
 	$(CC) $(CFLAGS) $^ -o $@
+
+task4: task4.o
+	$(CC) $(CFLAGS) $^ -lrt -o $@
+
+task4.o: task3.c
+	$(CC) $(CFLAGS) $^ -o $@
+
 
 clean:
 	rm -f *.o task{1..10}{_client,server,''}

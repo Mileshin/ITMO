@@ -10,7 +10,7 @@
 #include <sys/types.h>
 #include <sys/loadavg.h>
 
-#include "task.h"
+#include "extern.h"
 
 info_t get_info(){
 	info_t info;
@@ -20,14 +20,14 @@ info_t get_info(){
 	info.gid = getgid();
 	info.diff = 0;
 
-	getloadavg(i.avg, AVG_LEN);
+	getloadavg(info.avg, AVG_LEN);
 
 	return info;
 }
 
 int main(){
 	time_t start = time(NULL);
-	time_t sur_time;
+	time_t cur_time;
 	int fd;
 	
 	/* remove socket file if exixts */
@@ -56,8 +56,8 @@ int main(){
 	while (1) {
 		cur_time = time(NULL);
 
-		info->diff = cur_time - start_time;
-		getloadavg(i->avg, AVG_LEN);
+		info->diff = cur_time - start;
+		getloadavg(info->avg, AVG_LEN);
 
 		sleep(1);
 	}
