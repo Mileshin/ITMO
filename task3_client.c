@@ -13,7 +13,6 @@
 
 int main(){
 	int fd;
-	info_t info;
 
 	/* open ipc file */
 	fd = open(name, O_RDWR);
@@ -23,9 +22,9 @@ int main(){
 	}
 
 	/* memory-mapping */
-	*info = (info_t*) mmap(NULL, sizeof(info_t), PROT_READ, 
+	info_t *info = (info_t*) mmap(NULL, sizeof(info_t), PROT_READ, 
 							MAP_SHARED, fd, 0);
-	if (i == MAP_FAILED) {
+	if (info == MAP_FAILED) {
 		perror("mmap");
 		return EXIT_FAILURE;
 	}
