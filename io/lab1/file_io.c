@@ -24,32 +24,6 @@ void file_close(struct file *file){
     filp_close(file, NULL);
 }
 
-int file_read(struct file *file, unsigned long long offset, unsigned char *data, unsigned int size){
-    mm_segment_t oldfs;
-    int ret;
-
-    oldfs = get_fs();
-    set_fs(get_ds());
-
-    ret = kernel_read(file, data, size, &offset);
-
-    set_fs(oldfs);
-    return ret;
-}
-
-int file_write(struct file *file, unsigned long long offset, unsigned char *data, unsigned int size){
-        mm_segment_t oldfs;
-        int ret;
-
-        oldfs = get_fs();
-        set_fs(get_ds());
-
-        ret = kernel_write(file, data, size, &offset);
-
-        set_fs(oldfs);
-        return ret;
-    }
-
 int file_sync(struct file *file) {
     vfs_fsync(file, 0);
     return 0;

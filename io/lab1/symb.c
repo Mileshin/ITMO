@@ -13,7 +13,7 @@
 
 #include "file_io.h"
 
-#define ERROR_PARSING printk(KERN_ERR "Command parsing error.\n"); return;
+#define ERROR_PARSING printk(KERN_ERR "VAR2: Command parsing error.\n"); return;
 
 #define strtolong(str_num,number,base){              \
     char *endptr;                                    \
@@ -35,19 +35,31 @@ static char data[PATH_MAX + 8];
 static ssize_t len_data = sizeof(data);
 
 static int my_open(struct inode *i, struct file *f){
-  printk(KERN_INFO "Driver: open()\n");
+  printk(KERN_INFO "VAR2: open()\n");
   return 0;
 }
 
 static int my_close(struct inode *i, struct file *f){
-  printk(KERN_INFO "Driver: close()\n");
+  printk(KERN_INFO "VAR2: close()\n");
   return 0;
 }
 
+
 static ssize_t my_read(struct file *f, char __user *buf, size_t len, loff_t *off){
-    printk( KERN_NOTICE "Simple-driver: Device file is read at offset = %i, read bytes count = %u"
-                     , (int)*off
-                     , (unsigned int)len );
+    size_t n;
+
+    if (workf != NULL) {
+        vfs_llseek(workf, 0, SEEK_SET);
+        n = kernel_read( workf, data, PATH_MAX, &workf->f_pos );
+        vfs_llseek(workf, 0, SEEK_END);
+        if( n < 0) {
+            printk( "VAR2: kernel_read failed\n" );
+            return -EIO;
+        }
+    } else {
+        printk(KERN_ERR "VAR2: File not opened.\n");
+    }
+    len_data = n;
 
     /* If position is behind the end of a file we have nothing to read */
     if (*off >= len_data)
@@ -79,9 +91,9 @@ void pars_cmd(void){
         if (workf != NULL){
             file_close(workf);                                                          // close file
             workf = NULL;
-            printk(KERN_INFO "File %s closed.\n",filename);
+            printk(KERN_INFO "VAR2: File %s closed.\n",filename);
         } else {
-            printk(KERN_ERR "Unable to close file. File not opened.\n");
+            printk(KERN_ERR "VAR2: Unable to close file. File not opened.\n");
         }
     } else
     // open command
@@ -92,13 +104,13 @@ void pars_cmd(void){
             strncpy(filename,token1,len_filename);
             workf = file_open(filename,O_CREAT|O_RDWR,0644);                        // open file
             if(workf == NULL) {
-                printk(KERN_ERR "Unable to open file. Error number %i.\n"
+                printk(KERN_ERR "VAR2: Unable to open file. Error number %i.\n"
                        ,error_num);
             } else {
-                printk(KERN_INFO "File %s opened.\n",filename);
+                printk(KERN_INFO "VAR2: File %s opened.\n",filename);
             }
         } else {
-             printk(KERN_ERR "Unable to open file. File already opened.\n");
+             printk(KERN_ERR "VAR2: Unable to open file. File already opened.\n");
         }
     } else
         // calculator //
@@ -135,14 +147,16 @@ void pars_cmd(void){
                     ans = first / second;
                     break;
                 case '*':
-                printk(KERN_ERR "sign: %c",sign);
                     ans = first * second;
                     break;
                 default:
                     ERROR_PARSING
                 break;
             }
-            printk(KERN_ERR "ans: %li",ans);
+            //printk(KERN_ERR "VAR2: ans: %li",ans);
+            sprintf(data, "%ld\n", ans);
+            //printk(KERN_ERR "VAR2: %s",data);
+            kernel_write(workf, data, strlen(data), &workf->f_pos);
         } else {
             ERROR_PARSING
         }
@@ -175,7 +189,7 @@ static struct file_operations mychdev_fops =
 
 static int __init ch_drv_init(void)
 {
-  printk(KERN_INFO "Hello!\n");
+  printk(KERN_INFO "VAR2: Hello!\n");
   if (alloc_chrdev_region(&first, 0, 1, "ch_dev") < 0)
   {
         return -1;
@@ -208,7 +222,7 @@ static void __exit ch_drv_exit(void)
   device_destroy(cl, first);
   class_destroy(cl);
   unregister_chrdev_region(first, 1);
-  printk(KERN_INFO "Bye!!!\n");
+  printk(KERN_INFO "VAR2: Bye!!!\n");
 }
 
 module_init(ch_drv_init);
